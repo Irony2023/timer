@@ -1,4 +1,5 @@
-import turtle
+import tkinter as tk
+from tkinter import ttk
 import time
 import math
 import pygame
@@ -7,40 +8,35 @@ import pygame
 pygame.init()
 
 # Create the main window
-root = turtle.Screen()
+root = tk.Tk()
 root.title("Clock Timer")
 
-# Set up the turtle
-t = turtle.Turtle()
-t.speed(0)
-t.penup()
-t.goto(0, -180)
-t.pendown()
-
-# Draw clock face
-t.circle(180)
-t.penup()
+# Create a canvas for the clock display
+canvas = tk.Canvas(root, width=200, height=200, bg="white")  # Set background color to white
+canvas.pack()
 
 # Define function to update the timer and move the hands
 def update_timer(seconds):
     minutes = seconds // 60
     seconds %= 60
     timer_text.set(f"{minutes:02}:{seconds:02}")
-
+    
     # Calculate hand positions
     second_angle = 360 - (seconds / 60 * 360)  # Angle in degrees
     minute_angle = 360 - (minutes / 60 * 360) - (seconds / 60 * 6)
-
+    
+    # Calculate hand lengths and coordinates
+    second_hand_length = 80
+    minute_hand_length = 60
+    
+    second_x = 100 + second_hand_length * math.cos(math.radians(second_angle))
+    second_y = 100 - second_hand_length * math.sin(math.radians(second_angle))
+    minute_x = 100 + minute_hand_length * math.cos(math.radians(minute_angle))
+    minute_y = 100 - minute_hand_length * math.sin(math.radians(minute_angle))
+    
     # Move the hands
-    move_hand(second_hand, second_angle, 150)
-    move_hand(minute_hand, minute_angle, 100)
-
-def move_hand(hand, angle, length):
-    hand.setheading(angle)
-    hand.penup()
-    hand.goto(0, 0)
-    hand.pendown()
-    hand.forward(length)
+    canvas.coords(second_hand, 100, 100, second_x, second_y)
+    canvas.coords(minute_hand, 100, 100, minute_x, minute_y)
 
 # Define function to start the timer
 def start_timer():
@@ -55,28 +51,21 @@ def start_timer():
     pygame.mixer.music.load("done_sound.mp3")  # Replace with your sound file
     pygame.mixer.music.play()
 
-# Timer text variable
-timer_text = turtle.Turtle()
-timer_text.penup()
-timer_text.goto(0, 200)
-timer_text.pendown()
-
-# Create clock hands
-second_hand = turtle.Turtle()
-second_hand.color("red")
-second_hand.speed(0)
-minute_hand = turtle.Turtle()
-minute_hand.color("blue")
-minute_hand.speed(0)
-
 # Create a start button
-start_button = turtle.Turtle()
-start_button.penup()
-start_button.goto(0, -220)
-start_button.pendown()
-start_button.hideturtle()
-start_button.write("Start", align="center", font=("Arial", 16, "normal"))
+start_button = ttk.Button(root, text="Start", command=start_timer)
+start_button.pack()
 
-# Set up the screen
-root.update()
+# Timer text variable
+timer_text = tk.StringVar()
+timer_label = tk.Label(root, textvariable=timer_text, font=("Helvetica", 24))
+timer_label.pack()
+
+# Draw clock face
+clock_face = canvas.create_oval(20, 20, 180, 180, width=4, outline="black")
+
+# Clock hands
+second_hand = canvas.create_line(100, 100, 100, 20, width=2, fill="red")
+minute_hand = canvas.create_line(100, 100, 100, 40, width=4, fill="blue")
+
+# Run the GUI event loop
 root.mainloop()
