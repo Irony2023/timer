@@ -9,51 +9,22 @@ pygame.init()
 
 # Create the main window
 root = tk.Tk()
-root.title("Moving Circle Timer")
+root.title("Clock Timer")
 
-# Create a canvas for the timer display
-canvas = tk.Canvas(root, width=200, height=200)
+# Create a canvas for the clock display
+canvas = tk.Canvas(root, width=200, height=200, bg="white")  # Set background color to white
 canvas.pack()
 
-# Define function to update the timer and move the circle
+# Define function to update the timer and move the hands
 def update_timer(seconds):
     minutes = seconds // 60
     seconds %= 60
     timer_text.set(f"{minutes:02}:{seconds:02}")
     
-    # Calculate circle position
-    angle = 360 - (seconds / (2 * 60) * 360)  # Angle in degrees
-    x = 100 + 80 * math.cos(math.radians(angle))
-    y = 100 - 80 * math.sin(math.radians(angle))
+    # Calculate hand positions
+    second_angle = 360 - (seconds / 60 * 360)  # Angle in degrees
+    minute_angle = 360 - (minutes / 60 * 360) - (seconds / 60 * 6)
     
-    # Move the circle
-    canvas.coords(circle, x - 10, y - 10, x + 10, y + 10)
-
-# Define function to start the timer
-def start_timer():
-    total_seconds = 2 * 60  # 2 minutes
-    while total_seconds > 0:
-        update_timer(total_seconds)
-        root.update()
-        time.sleep(1)
-        total_seconds -= 1
-    
-    # Play sound
-    pygame.mixer.music.load("done_sound.mp3")  # Replace with your sound file
-    pygame.mixer.music.play()
-
-# Create a start button
-start_button = ttk.Button(root, text="Start", command=start_timer)
-start_button.pack()
-
-# Timer text variable
-timer_text = tk.StringVar()
-timer_label = tk.Label(canvas, textvariable=timer_text, font=("Helvetica", 24))
-timer_label.place(relx=0.5, rely=0.1, anchor="center")
-
-# Circular timer design
-circle = canvas.create_oval(10, 10, 30, 30, fill="blue")
-canvas.create_oval(10, 10, 190, 190, outline="gray", width=10)
-
-# Run the GUI event loop
-root.mainloop()
+    # Calculate hand lengths
+    second_hand_length = 80
+    minute_hand_length
