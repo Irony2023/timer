@@ -25,6 +25,15 @@ def update_timer(seconds):
     second_angle = 360 - (seconds / 60 * 360)  # Angle in degrees
     minute_angle = 360 - (minutes / 60 * 360) - (seconds / 60 * 6)
     
-    # Calculate hand lengths
+    # Calculate hand lengths and coordinates
     second_hand_length = 80
-    minute_hand_length
+    minute_hand_length = 60
+    
+    second_x = 100 + second_hand_length * math.cos(math.radians(second_angle))
+    second_y = 100 - second_hand_length * math.sin(math.radians(second_angle))
+    minute_x = 100 + minute_hand_length * math.cos(math.radians(minute_angle))
+    minute_y = 100 - minute_hand_length * math.sin(math.radians(minute_angle))
+    
+    # Move the hands
+    canvas.coords(second_hand, 100, 100, second_x, second_y)
+    canvas.coords(minute_hand, 100, 100, minute
