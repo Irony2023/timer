@@ -2,11 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 import time
 import math
-import random
 
 # Create the main window
 root = tk.Tk()
-root.title("Fish Clock")
+root.title("Clock Timer")
 
 # Create a canvas for the clock display
 canvas = tk.Canvas(root, width=400, height=400, bg="white")  # Set background color to white
@@ -44,17 +43,9 @@ def start_timer():
     total_seconds = 10  # 10 seconds
     while total_seconds > 0:
         update_timer(total_seconds)
-        move_flying_fish()
         root.update()
         time.sleep(1)
         total_seconds -= 1
-
-# Define function to move flying fish
-def move_flying_fish():
-    for fish in flying_fishes:
-        dx = random.randint(-3, 3)
-        dy = random.randint(-3, 3)
-        canvas.move(fish, dx, dy)
 
 # Create a start button
 start_button = ttk.Button(root, text="Start", command=start_timer)
@@ -74,13 +65,6 @@ for number in range(1, 13):
     x = 200 + 160 * math.cos(angle)
     y = 200 - 160 * math.sin(angle)
     canvas.create_text(x, y, text=str(number), font=("Helvetica", 18, "bold"))
-
-# Create flying fish
-fish1 = canvas.create_polygon(0, 0, 20, 10, 10, 20, fill="blue")
-fish2 = canvas.create_polygon(0, 0, 20, -10, 10, -20, fill="red")
-fish3 = canvas.create_polygon(0, 0, -20, 10, -10, 20, fill="green")
-
-flying_fishes = [fish1, fish2, fish3]
 
 # Clock hands
 second_hand = canvas.create_line(200, 200, 200, 60, width=2, fill="red")
