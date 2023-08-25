@@ -5,7 +5,7 @@ import math
 
 # Create the main window
 root = tk.Tk()
-root.title("Fish Clock")
+root.title("Clock Timer")
 
 # Create a canvas for the clock display
 canvas = tk.Canvas(root, width=400, height=400, bg="white")  # Set background color to white
@@ -18,8 +18,8 @@ def update_timer(seconds):
     timer_text.set(f"{minutes:02}:{seconds:02}")
     
     # Calculate hand positions
-    second_angle = (seconds / 5 * 360)  # Angle in degrees (clockwise)
-    minute_angle = (minutes / 5 * 360) + (seconds / 5 * 6)  # Angle in degrees (clockwise)
+    second_angle = (seconds / 60 * 360)  # Angle in degrees (clockwise)
+    minute_angle = (minutes / 60 * 360) + (seconds / 60 * 6)  # Angle in degrees (clockwise)
     
     # Calculate hand lengths and coordinates
     second_hand_length = 140
@@ -34,13 +34,13 @@ def update_timer(seconds):
     canvas.coords(second_hand, 200, 200, second_x, second_y)
     canvas.coords(minute_hand, 200, 200, minute_x, minute_y)
     
-    if minutes == 0 and seconds == 0:
+    if minutes == 0 and seconds == 1:
         timer_text.set("End of Game")
         timer_label.config(font=("Helvetica", 36, "bold"))
 
 # Define function to start the timer
 def start_timer():
-    total_seconds = 5  # 5 seconds
+    total_seconds = 10  # 10 seconds
     while total_seconds > 0:
         update_timer(total_seconds)
         root.update()
@@ -56,9 +56,15 @@ timer_text = tk.StringVar()
 timer_label = tk.Label(root, textvariable=timer_text, font=("Helvetica", 24))
 timer_label.pack()
 
-# Draw fish-shaped clock face
-canvas.create_oval(50, 100, 350, 300, width=6, outline="black")
-canvas.create_arc(120, 120, 280, 220, start=-30, extent=60, width=4, outline="black")
+# Draw clock face
+canvas.create_oval(30, 30, 370, 370, width=6, outline="black")
+
+# Draw clock numbers
+for number in range(1, 13):
+    angle = math.radians(-number * 30 + 60)
+    x = 200 + 160 * math.cos(angle)
+    y = 200 - 160 * math.sin(angle)
+    canvas.create_text(x, y, text=str(number), font=("Helvetica", 18, "bold"))
 
 # Clock hands
 second_hand = canvas.create_line(200, 200, 200, 60, width=2, fill="red")
